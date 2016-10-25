@@ -1,4 +1,4 @@
-name := "PacBio Subreadset Metrics"
+name := "Subreadset Metrics"
 
 version in ThisBuild := "0.0.1"
 
