@@ -20,7 +20,7 @@ javaOptions in ThisBuild += "-Xmx2g"
 mainClass in (Compile, run) := Some("com.pacb.itg.Main")
 
 // `sbt pack` to make all JARs for a deploy. see https://github.com/xerial/sbt-pack
-packSettings
+packAutoSettings
 
 libraryDependencies ++= Seq(
   "org.scala-lang.modules" %% "scala-xml" % "1.0.5",
