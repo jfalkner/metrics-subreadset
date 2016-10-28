@@ -16,12 +16,6 @@ fork in ThisBuild := true
 javaOptions in ThisBuild += "-Xms256m"
 javaOptions in ThisBuild += "-Xmx2g"
 
-// assembly options from - https://github.com/sbt/sbt-assembly
-// Don't run the test before building the jar
-test in assembly := {}
-assemblyJarName in assembly := s"pacb_metrics-${version.value}.jar"
-mainClass in assembly := Some("com.pacb.itg.Main")
-
 // `sbt run` will run this class
 mainClass in (Compile, run) := Some("com.pacb.itg.Main")
 
