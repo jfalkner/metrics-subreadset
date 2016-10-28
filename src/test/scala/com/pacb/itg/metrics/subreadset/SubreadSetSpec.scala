@@ -2,6 +2,7 @@ package com.pacb.itg.metrics.subreadset
 
 import java.nio.file.Paths
 
+import falkner.jayson.metrics.io.CSV
 import org.specs2.mutable.Specification
 
 
@@ -13,6 +14,13 @@ class SubreadSetSpec extends Specification with TestData {
   lazy val srs = SubreadSet(movieDir)
 
   "SubreadSet checking" should {
+    "Current version calculates without error" in {
+      println(s"Current EOL QC Version: ${SubreadSet.currentVersion}")
+      SubreadSet.currentVersion != null mustEqual true
+    }
+    "Support blank CSV generation" in {
+      CSV(SubreadSet.blank).all != null mustEqual true
+    }
     "Load from movie directory" in (srs.asString("Time-Stamped Name") mustEqual tsName)
     "Name" in (srs.asString("Name") mustEqual "09232016_A88_LVP19_11kb_Batch_Qual+Liner_Chk")
     "UniqueID" in (srs.asString("UUID") mustEqual  "ef4f6dd1-d62a-4c94-90ff-c7ebda0eca82")

@@ -17,6 +17,12 @@ import scala.xml.{Elem, XML}
   */
 object SubreadSet {
 
+  val version = "0.0.1"
+
+  lazy val blank = new SubreadSet(null, null)
+
+  lazy val currentVersion = blank.version
+
   // placeholder to support other versions down the road
   def apply(p: Path): SubreadSet_v3_0_1 = {
     Files.exists(p) match {
