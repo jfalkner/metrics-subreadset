@@ -46,6 +46,8 @@ class SubreadSet_v3_0_1(val p: Path, val xml: Node) extends Metrics {
   override val namespace = "SS"
   override val version = s"${SubreadSet.version}~${SubreadSet_v3_0_1.version}"
   override val values: List[Metric] = List(
+    Str("Code Version", SubreadSet.version),
+    Str("Spec Version", SubreadSet_v3_0_1.version),
     Str("Path", p.toAbsolutePath.toString),
     // TODO: add the external resources links. points to .pbi (PacBio index) and .sts.xml (chips stats file)
     Num("Total Length", (xml \ "DataSetMetadata" \ "TotalLength").text),
