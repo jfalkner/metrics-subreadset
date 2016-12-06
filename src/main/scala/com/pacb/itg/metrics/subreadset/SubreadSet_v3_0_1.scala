@@ -75,7 +75,7 @@ class SubreadSet_v3_0_1(val p: Path, val xml: Node) extends Metrics {
     Str("InstCtrlVer", (cmd \ "InstCtrlVer").map(_.text).head),
     Str("SigProcVer", (cmd \ "SigProcVer").map(_.text).head),
     Num("Cell Index", (cmd \ "CellIndex").map(_.text).head),
-    Num("Movie In Cell Index", movieInCellIndex),
+    Num("Movie Index In Cell", movieInCellIndex),
     Str("Well", (cmd \ "WellSample" \ "@Name").map(_.text).head),
     Str("Well: Description", (cmd \ "WellSample" \ "@Description").map(_.text).head),
     Str("Well: Name", (cmd \ "WellSample" \ "WellName").map(_.text).head),
