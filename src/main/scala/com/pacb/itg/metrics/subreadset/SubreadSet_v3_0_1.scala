@@ -1,10 +1,10 @@
 package com.pacb.itg.metrics.subreadset
 
-import java.nio.file.Path
+import java.nio.file.{Files, Path}
 
 import falkner.jayson.metrics._
-
 import scala.xml.{Elem, Node, XML}
+import scala.collection.JavaConverters._
 
 
 /**
@@ -75,6 +75,7 @@ class SubreadSet_v3_0_1(val p: Path, val xml: Node) extends Metrics {
     Str("InstCtrlVer", (cmd \ "InstCtrlVer").map(_.text).head),
     Str("SigProcVer", (cmd \ "SigProcVer").map(_.text).head),
     Num("Cell Index", (cmd \ "CellIndex").map(_.text).head),
+    Num("Movie In Cell Index", movieInCellIndex),
     Str("Well", (cmd \ "WellSample" \ "@Name").map(_.text).head),
     Str("Well: Description", (cmd \ "WellSample" \ "@Description").map(_.text).head),
     Str("Well: Name", (cmd \ "WellSample" \ "WellName").map(_.text).head),
@@ -136,4 +137,17 @@ class SubreadSet_v3_0_1(val p: Path, val xml: Node) extends Metrics {
     Str("Transfer Resource: Dest Path", (cmd \ "Primary" \ "OutputOptions" \ "TransferResource" \ "DestPath").map(_.text).head)
     // TODO: Secondary has a new metrics. None seem important to inlclude
   )
+
+  /**
+    * See ITG-281 this may be a bug where "Use Count" isn't populated correctly
+    * EOL QC needs this, it'll probably work fine to derive it from the directory structure and it arguably should be
+    * present in subreadset.xml. Adding the code here until Primary can add (or fix) such a number in *.subreadset.xml
+    */
+  def movieInCellIndex: Int =
+    Files.list(p.getParent.getParent).iterator.asScala.flatMap(well =>
+      Files.list(well).iterator.asScala.filter(_.getFileName.toString.endsWith(".subreadset.xml")).map(sp =>
+        SubreadSet(sp)).filter(_.cellIndex == cellIndex).map(_.collectionNumber)).toList.sorted.indexOf(collectionNumber)
+
+  def cellIndex: String = asString("Cell Index")
+  def collectionNumber: Int = asString("Collection Number").toInt
 }
