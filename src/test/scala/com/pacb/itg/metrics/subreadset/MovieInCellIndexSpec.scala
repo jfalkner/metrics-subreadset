@@ -13,7 +13,7 @@ import org.specs2.mutable.Specification
 class MovieInCellIndexSpec extends Specification with TestData {
 
   def movieInCellIndex(wellMovie: String): Int =
-    SubreadSet(Paths.get(s"/pbi/collections/312/3120185/r54009_20161107_213956/$wellMovie.subreadset.xml")).movieInCellIndex
+    SubreadSet_v3_0_1(Paths.get(s"/pbi/collections/312/3120185/r54009_20161107_213956/$wellMovie.subreadset.xml")).movieInCellIndex
 
   // first 3 cells worth of movies for r54009_20161107_213956
   // cell index, collection count = movie in cell index

@@ -2,6 +2,8 @@ package com.pacb.itg.metrics.subreadset
 
 import java.nio.file.{Files, Path, Paths}
 
+import falkner.jayson.metrics.Metrics
+
 import scala.collection.JavaConverters._
 import scala.xml.{Elem, XML}
 
@@ -17,14 +19,14 @@ import scala.xml.{Elem, XML}
   */
 object SubreadSet {
 
-  val version = "0.0.5"
+  val version = "0.0.6"
 
   lazy val blank = new SubreadSet(null, null)
 
   lazy val currentVersion = blank.version
 
   // placeholder to support other versions down the road
-  def apply(p: Path): SubreadSet_v3_0_1 = {
+  def apply(p: Path): Metrics = {
     Files.exists(p) match {
       case true => Files.isDirectory(p) match {
         case false => loadVersion(p)
@@ -35,10 +37,11 @@ object SubreadSet {
   }
 
   // check what version exists and send it back
-  def loadVersion(p: Path): SubreadSet_v3_0_1 ={
+  def loadVersion(p: Path): Metrics ={
     val srs = XML.loadFile(p.toFile)
     val version = (srs \ "@Version").text
     version match {
+      case "4.0.0" => SubreadSet_v4_0_0(p, srs)
       case "3.0.1" => SubreadSet_v3_0_1(p, srs)
       case _ => throw new Exception(s"Version $version not currently supported")
     }
@@ -47,4 +50,4 @@ object SubreadSet {
 
 
 // current latest version
-class SubreadSet(p: Path, xml: Elem) extends SubreadSet_v3_0_1(p, xml)
+class SubreadSet(p: Path, xml: Elem) extends SubreadSet_v4_0_0(p, xml)

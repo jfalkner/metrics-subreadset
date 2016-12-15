@@ -45,9 +45,12 @@ class SubreadSet_v3_0_1(val p: Path, val xml: Node) extends Metrics {
 
   override val namespace = "SS"
   override val version = s"${SubreadSet.version}~${SubreadSet_v3_0_1.version}"
-  override val values: List[Metric] = List(
+  lazy val unique: List[Metric] = List(
     Str("Code Version", SubreadSet.version),
-    Str("Spec Version", SubreadSet_v3_0_1.version),
+    Str("Spec Version", SubreadSet_v3_0_1.version)
+  )
+  // used in 4.0.0 (aka Goat)
+  lazy val shared: List[Metric] = List(
     Str("Path", p.toAbsolutePath.toString),
     // TODO: add the external resources links. points to .pbi (PacBio index) and .sts.xml (chips stats file)
     Num("Total Length", (xml \ "DataSetMetadata" \ "TotalLength").text),
@@ -137,6 +140,7 @@ class SubreadSet_v3_0_1(val p: Path, val xml: Node) extends Metrics {
     Str("Transfer Resource: Dest Path", (cmd \ "Primary" \ "OutputOptions" \ "TransferResource" \ "DestPath").map(_.text).head)
     // TODO: Secondary has a new metrics. None seem important to inlclude
   )
+  override val values: List[Metric] = unique ++ shared
 
   /**
     * See ITG-281 this may be a bug where "Use Count" isn't populated correctly
@@ -146,7 +150,7 @@ class SubreadSet_v3_0_1(val p: Path, val xml: Node) extends Metrics {
   def movieInCellIndex: Int =
     Files.list(p.getParent.getParent).iterator.asScala.flatMap(well =>
       Files.list(well).iterator.asScala.filter(_.getFileName.toString.endsWith(".subreadset.xml")).map(sp =>
-        SubreadSet(sp)).filter(_.cellIndex == cellIndex).map(_.collectionNumber)).toList.sorted.indexOf(collectionNumber)
+        SubreadSet_v3_0_1(sp)).filter(_.cellIndex == cellIndex).map(_.collectionNumber)).toList.sorted.indexOf(collectionNumber)
 
   def cellIndex: String = asString("Cell Index")
   def collectionNumber: Int = asString("Collection Number").toInt
