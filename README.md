@@ -30,10 +30,11 @@ Exporting aligned movies is the most common use case. See [ITG-190](https://jira
 
 ```
 # Export all the data to a CSV named ITG-190.csv
-sbt "run m54088_160923_213709.subreadset.xml m54088_160923_213709.csv"
+sbt "run m54088_160923_213709.subreadset.xml"
 
-# Another option is to export to a JSON
-sbt "run m54088_160923_213709.subreadset.xml m54088_160923_213709.json"
+# makes  
+m54088_160923_213709.csv
+m54088_160923_213709.json
 ```
 
 ## Metrics
