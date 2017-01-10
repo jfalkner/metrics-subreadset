@@ -5,7 +5,7 @@ import java.nio.file.Paths
 import falkner.jayson.metrics.io.CSV
 import org.specs2.mutable.Specification
 
-
+// has both common test and version 3.0.1 tests. TODO: split to two different test specs
 class SubreadSetSpec extends Specification with TestData {
 
   val subreadFileName = s"$movieTsName.subreadset.xml"
@@ -21,16 +21,28 @@ class SubreadSetSpec extends Specification with TestData {
     "Support blank CSV generation" in {
       CSV(SubreadSet.blank).all != null mustEqual true
     }
+    "Non-existant or otherwise unaccessible subreadset.xml throws an error" in {
+      val p = Paths.get("/file/that/doesnt/exist.subreadset.xml")
+      SubreadSet(p) must throwA(new Exception(SubreadSet.badPath(p)))
+    }
+    "Unknown version of subreadset.xml throws an error" in {
+      val p = Paths.get("/pbi/dept/itg/test-data/subreadset/unsupported/pbi/collections/320/3200035/r54088_20160923_213253/1_A01/m54088_160923_213709.subreadset.xml")
+      SubreadSet(p) must throwA(new Exception(SubreadSet.unsupportedVersion("bad123")))
+    }
+    "Code Version" in (srs.asString("Code Version") mustEqual SubreadSet.version)
+    "Spec Version" in (srs.asString("Spec Version") mustEqual SubreadSet_v3_0_1.version)
     "Load from movie directory" in (srs.asString("Time-Stamped Name") mustEqual tsName)
     "Name" in (srs.asString("Name") mustEqual "09232016_A88_LVP19_11kb_Batch_Qual+Liner_Chk")
     "UniqueID" in (srs.asString("UUID") mustEqual  "ef4f6dd1-d62a-4c94-90ff-c7ebda0eca82")
     "CreatedAt String" in (srs.asString("Created At") mustEqual "2016-09-24T02:14:53Z")
     "Tags" in (srs.asString("Tags") mustEqual "subreadset")
+    "Context" in (srs.asString("Context") mustEqual movieTsName)
     "TotalLength String" in (srs.asString("Total Length") mustEqual "532500977")
     "NumRecords String" in (srs.asString("Num Records") mustEqual "153993")
     "CollectionMetaData.InstrumentId" in (srs.asString("Instrument ID") mustEqual "54088")
     "CollectionMetaData.InstrumentName" in (srs.asString("Instrument Name") mustEqual "Sequel")
     "CollectionMetaData.UniqueId" in (srs.asString("Collection: UUID") mustEqual "ef4f6dd1-d62a-4c94-90ff-c7ebda0eca82")
+    "CollectionMetaData.MetaType" in (srs.asString("Collection: Meta-Type") mustEqual "CollectionMetadata")
     "CollectionMetaData.TimestampedName" in (srs.asString("Collection: Time-Stamped Name") mustEqual "54088-CollectionMetadata-2016-32-23T21:32:53.968Z")
     "CollectionMetaData.Status" in (srs.asString("Status") mustEqual "Ready")
     "CollectionMetaData.CreatedAt" in (srs.asString("Collection: Created At") mustEqual "2016-09-23T19:40:37.65Z")
@@ -42,6 +54,8 @@ class SubreadSetSpec extends Specification with TestData {
     "CollectionMetaData.RunDetails.WhenCreated" in (srs.asString("Run: When Created") mustEqual "2016-09-23T19:40:37.65Z")
     "CollectionMetaData.RunDetails.WhenStarted" in (srs.asString("Run: When Started") mustEqual "2016-09-23T21:37:08.213808Z")
     "CollectionMetaData.WellSample.WellName" in (srs.asString("Well: Name") mustEqual "A01")
+    "WellSample@Name" in (srs.asString("Well") mustEqual "VP52490-11_4851_BA035012_A88_2.04mW_400_11kB_833pM_MBS")
+//    "WellSample@Description" in (srs.asString("Well: Description") must throwA(new NoSuchElementException("head of empty list"))) // never used?
     "CollectionMetaData.WellSample.Concentration Raw String" in (srs.asString("Concentration") mustEqual "0.0")
     "CollectionMetaData.WellSample.InsertSize Raw String" in (srs.asString("Insert Size") mustEqual "10000")
     "CollectionMetaData.WellSample.SampleReuseEnabled Raw String" in (srs.asBoolean("Sample Reuse Enabled") mustEqual false)

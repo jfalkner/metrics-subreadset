@@ -19,11 +19,15 @@ import scala.xml.{Elem, XML}
   */
 object SubreadSet {
 
-  val version = "0.0.6"
+  val version = "0.0.8"
 
   lazy val blank = new SubreadSet(null, null)
 
   lazy val currentVersion = blank.version
+
+  def badPath(p: Path): String = s"Path $p must be a .subreadset.xml file that exists or directory with one in it."
+
+  def unsupportedVersion(version: String): String = s"Version $version not currently supported"
 
   // placeholder to support other versions down the road
   def apply(p: Path): Metrics = {
@@ -32,7 +36,7 @@ object SubreadSet {
         case false => loadVersion(p)
         case _ => loadVersion(Files.list(p).toArray.toList.asInstanceOf[List[Path]].filter(_.toString.endsWith(".subreadset.xml")).head)
       }
-      case _ => throw new Exception(s"Path $p must be a .subreadset.xml file that exists or directory with one in it.")
+      case _ => throw new Exception(badPath(p))
     }
   }
 
@@ -43,7 +47,7 @@ object SubreadSet {
     version match {
       case "4.0.0" => SubreadSet_v4_0_0(p, srs)
       case "3.0.1" => SubreadSet_v3_0_1(p, srs)
-      case _ => throw new Exception(s"Version $version not currently supported")
+      case _ => throw new Exception(unsupportedVersion(version))
     }
   }
 }

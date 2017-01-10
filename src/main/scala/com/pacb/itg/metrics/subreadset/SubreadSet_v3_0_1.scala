@@ -41,8 +41,6 @@ class SubreadSet_v3_0_1(val p: Path, val xml: Node) extends Metrics {
   def getAutomationParam(name: String): String =
     (cmd \ "Automation" \ "AutomationParameters" \ "AutomationParameter").filter(n => (n \ "@Name").text == name).map(_ \ "@SimpleValue").head.text
 
-  def sequencingKitPlateReagentTube(part: String, attr: String): String = ((cmd \ "SequencingKitPlate" \ "ReagentTubes").filter(n => (n \ "@PartNumber").text == part).head \ attr).text
-
   override val namespace = "SS"
   override val version = s"${SubreadSet.version}~${SubreadSet_v3_0_1.version}"
   lazy val unique: List[Metric] = List(
@@ -80,7 +78,7 @@ class SubreadSet_v3_0_1(val p: Path, val xml: Node) extends Metrics {
     Num("Cell Index", (cmd \ "CellIndex").map(_.text).head),
     Num("Movie Index In Cell", movieInCellIndex),
     Str("Well", (cmd \ "WellSample" \ "@Name").map(_.text).head),
-    Str("Well: Description", (cmd \ "WellSample" \ "@Description").map(_.text).head),
+    //Str("Well: Description", (cmd \ "WellSample" \ "@Description").map(_.text).head), // never used?
     Str("Well: Name", (cmd \ "WellSample" \ "WellName").map(_.text).head),
     Str("Concentration", (cmd \ "WellSample" \ "Concentration").map(_.text).head),
     Num("Insert Size", (cmd \ "WellSample" \ "InsertSize").map(_.text).head),
