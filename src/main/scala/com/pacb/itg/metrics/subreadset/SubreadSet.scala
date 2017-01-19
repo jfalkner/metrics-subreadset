@@ -19,7 +19,7 @@ import scala.xml.{Elem, XML}
   */
 object SubreadSet {
 
-  val version = "0.0.8"
+  val version = "0.0.9"
 
   lazy val blank = new SubreadSet(null, null)
 

@@ -97,18 +97,18 @@ class SubreadSetSpec extends Specification with TestData {
 //    "CollectionMetaData.TemplatePrepKit.LeftAdaptorSequence" in (srs.leftAdaptor mustEqual "ATCTCTCTCAACAACAACAACGGAGGAGGAGGAAAAGAGAGAGAT")
 //    "CollectionMetaData.TemplatePrepKit.RightAdaptorSequence" in (srs.rightAdaptor mustEqual "ATCTCTCTCAACAACAACAACGGAGGAGGAGGAAAAGAGAGAGAT")
 //    // CollectionMetaData.SequencingKitPlate
-//    "CollectionMetaData.SequencingKitPlate@PartNumber" in (srs.skpPart mustEqual "100-902-100")
-//    "CollectionMetaData.SequencingKitPlate@LotNumber" in (srs.skpLot mustEqual "160727")
-//    "CollectionMetaData.SequencingKitPlate@Barcode" in (srs.skpBarcode mustEqual "160727100902100012617")
-//    "CollectionMetaData.SequencingKitPlate@ExpirationDate" in (srs.skpExpiration mustEqual "2017-01-26")
-//    "CollectionMetaData.SequencingKitPlate@Name" in (srs.skpName mustEqual "Sequel™ Sequencing Plate 1.2")
-//    // CollectionMetaData.SequencingKitPlate ReagentTubes
+    "CollectionMetaData.SequencingKitPlate@PartNumber" in (srs.asString("Sequencing Kit: Part Number") mustEqual "100-902-100")
+    "CollectionMetaData.SequencingKitPlate@LotNumber" in (srs.asString("Sequencing Kit: Lot Number") mustEqual "160727")
+    "CollectionMetaData.SequencingKitPlate@Barcode" in (srs.asString("Sequencing Kit: Barcode") mustEqual "160727100902100012617")
+    "CollectionMetaData.SequencingKitPlate@ExpirationDate" in (srs.asString("Sequencing Kit: Expiration") mustEqual "2017-01-26")
+    "CollectionMetaData.SequencingKitPlate@Name" in (srs.asString("Sequencing Kit: Name") mustEqual "Sequel™ Sequencing Plate 1.2")
+    // CollectionMetaData.SequencingKitPlate ReagentTubes
 //    "CollectionMetaData.SequencingKitPlate.ReagentTubes.PartNumber 100-619-700" in (srs.skpReagentPart("100-619-700") mustEqual "100-619-700")
-//    "CollectionMetaData.SequencingKitPlate.ReagentTubes.LotNumber 100-619-700" in (srs.skpReagentLot("100-619-700") mustEqual "107053")
-//    "CollectionMetaData.SequencingKitPlate.ReagentTubes.ExpirationDate 100-619-700" in (srs.skpReagentExpiration("100-619-700") mustEqual "2018-07-25")
+    "CollectionMetaData.SequencingKitPlate.ReagentTubes.LotNumber 100-619-700" in (srs.asString("100-619-700: Lot") mustEqual "107053")
+    "CollectionMetaData.SequencingKitPlate.ReagentTubes.ExpirationDate 100-619-700" in (srs.asString("100-619-700: Expiration") mustEqual "2018-07-25")
 //    "CollectionMetaData.SequencingKitPlate.ReagentTubes.PartNumber 100-619-600" in (srs.skpReagentPart("100-619-600") mustEqual "100-619-600")
-//    "CollectionMetaData.SequencingKitPlate.ReagentTubes.LotNumber 100-619-600" in (srs.skpReagentLot("100-619-600") mustEqual "007666")
-//    "CollectionMetaData.SequencingKitPlate.ReagentTubes.ExpirationDate 100-619-600" in (srs.skpReagentExpiration("100-619-600") mustEqual "2020-05-31")
+    "CollectionMetaData.SequencingKitPlate.ReagentTubes.LotNumber 100-619-600" in (srs.asString("100-619-600: Lot") mustEqual "007666")
+    "CollectionMetaData.SequencingKitPlate.ReagentTubes.ExpirationDate 100-619-600" in (srs.asString("100-619-600: Expiration") mustEqual "2020-05-31")
 //    // CollectionMetaData.Primary
 //    "CollectionMetaData.Primary.AutomationName" in (srs.pAutomationName mustEqual "Default")
 //    "CollectionMetaData.Primary.ConfigFileName" in (srs.configFile mustEqual "SqlPoC_SubCrf_2C2A-t2.xml")

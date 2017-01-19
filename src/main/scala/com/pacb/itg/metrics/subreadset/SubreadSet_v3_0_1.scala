@@ -41,6 +41,8 @@ class SubreadSet_v3_0_1(val p: Path, val xml: Node) extends Metrics {
   def getAutomationParam(name: String): String =
     (cmd \ "Automation" \ "AutomationParameters" \ "AutomationParameter").filter(n => (n \ "@Name").text == name).map(_ \ "@SimpleValue").head.text
 
+  def reagentTube(part: String) = (cmd \ "SequencingKitPlate" \ "ReagentTubes").filter(n => (n \ "@PartNumber").text == part).head
+
   override val namespace = "SS"
   override val version = s"${SubreadSet.version}~${SubreadSet_v3_0_1.version}"
   lazy val unique: List[Metric] = List(
@@ -124,6 +126,12 @@ class SubreadSet_v3_0_1(val p: Path, val xml: Node) extends Metrics {
     Str("Sequencing Kit: Barcode", (cmd \ "SequencingKitPlate" \ "@Barcode").map(_.text).head),
     Str("Sequencing Kit: Expiration", (cmd \ "SequencingKitPlate" \ "@ExpirationDate").map(_.text).head),
     Str("Sequencing Kit: Name", (cmd \ "SequencingKitPlate" \ "@Name").map(_.text).head),
+    // 100-619-600 = MineralOil
+    Str("100-619-600: Lot", (reagentTube("100-619-600") \ "@LotNumber").head.text),
+    Str("100-619-600: Expiration", (reagentTube("100-619-600") \ "@ExpirationDate").head.text),
+    // 100-619-700 = OSenzyme
+    Str("100-619-700: Lot", (reagentTube("100-619-700") \ "@LotNumber").head.text),
+    Str("100-619-700: Expiration", (reagentTube("100-619-700") \ "@ExpirationDate").head.text),
     // TODO: Add ReagentTubes ... may differ depending on experiment. Lookup by PartNumber, then have PartNumber, LotNumber and ExpirationDate
     Str("Primary: Automation Name", (cmd \ "Primary" \ "AutomationName").map(_.text).head),
     Str("Primary: Config File", (cmd \ "Primary" \ "ConfigFileName").map(_.text).head),
