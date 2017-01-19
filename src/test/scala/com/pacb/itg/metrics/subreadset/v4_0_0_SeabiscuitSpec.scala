@@ -13,7 +13,8 @@ import org.specs2.mutable.Specification
 class v4_0_0_SeabiscuitSpec extends Specification with TestData {
 
   // /pbi/collections/315/3150529/r54003_20161209_231018/1_A01/m54003_161209_232044.transferdone
-  val sp = Paths.get("/pbi/collections/315/3150529/r54003_20161209_231018/1_A01/m54003_161209_232044.subreadset.xml")
+  val base = Paths.get("/pbi/dept/itg/test-data/subreadset/4_0_0_seabiscuit")
+  val sp = base.resolve("pbi/collections/315/3150529/r54003_20161209_231018/1_A01/m54003_161209_232044.subreadset.xml")
   lazy val srs = SubreadSet(sp)
 
   // first 3 cells worth of movies for r54009_20161107_213956

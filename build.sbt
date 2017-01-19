@@ -1,6 +1,6 @@
 name := "itg_metrics_subreadset"
 
-version in ThisBuild := "0.0.9"
+version in ThisBuild := "0.0.10"
 
 organization in ThisBuild := "com.pacb"
 
