@@ -152,12 +152,8 @@ class SubreadSet_v3_0_1(val p: Path, val xml: Node) extends Metrics {
     * See ITG-281 this may be a bug where "Use Count" isn't populated correctly
     * EOL QC needs this, it'll probably work fine to derive it from the directory structure and it arguably should be
     * present in subreadset.xml. Adding the code here until Primary can add (or fix) such a number in *.subreadset.xml
+    *
+    * The modulus 5 trick here only works because EOL QC does laser titrations of 5x
     */
-  def movieInCellIndex: Int =
-    Files.list(p.getParent.getParent).iterator.asScala.flatMap(well =>
-      Files.list(well).iterator.asScala.filter(_.getFileName.toString.endsWith(".subreadset.xml")).map(sp =>
-        SubreadSet_v3_0_1(sp)).filter(_.cellIndex == cellIndex).map(_.collectionNumber)).toList.sorted.indexOf(collectionNumber)
-
-  def cellIndex: String = asString("Cell Index")
-  def collectionNumber: Int = asString("Collection Number").toInt
+  def movieInCellIndex: Int = asString("Collection Number").toInt % 5
 }
