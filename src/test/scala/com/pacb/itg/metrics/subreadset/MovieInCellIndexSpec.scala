@@ -12,8 +12,6 @@ import org.specs2.mutable.Specification
   */
 class MovieInCellIndexSpec extends Specification with TestData {
 
-  sequential
-
   def movieInCellIndex(prefix: String, wellMovie: String): Int =
     SubreadSet_v3_0_1(Paths.get(s"$prefix/$wellMovie.subreadset.xml")).movieInCellIndex
 
@@ -21,7 +19,7 @@ class MovieInCellIndexSpec extends Specification with TestData {
   // cell index, collection count = movie in cell index
   "Movie In Chip Index" should {
     val testData = "/pbi/dept/itg/test-data"
-    val r54009_20161107_213956 = "/pbi/collections/312/3120185/r54009_20161107_213956"
+    val r54009_20161107_213956 = s"$testData/ITG-386/pbi/collections/312/3120185/r54009_20161107_213956"
     // first cell. movies 0-4
     "0, 0 = 0" in (movieInCellIndex(r54009_20161107_213956, "1_A01/m54009_161107_214323") mustEqual 0)
     "0, 1 = 1" in (movieInCellIndex(r54009_20161107_213956, "2_A01/m54009_161107_234350") mustEqual 1)
@@ -41,11 +39,15 @@ class MovieInCellIndexSpec extends Specification with TestData {
     "2, 13 = 3" in (movieInCellIndex(r54009_20161107_213956, "14_C01/m54009_161108_051855") mustEqual 3)
     "2, 14 = 4" in (movieInCellIndex(r54009_20161107_213956, "15_C01/m54009_161108_054553") mustEqual 4)
     // ITG-386 bug. if instrument fails to transfer file, then the old logic will have the wrong calculated index
-    val r54134_20170120_223549 = s"$testData/ITG-386/r54134_20170120_223549"
+    val r54134_20170120_223549 = s"$testData/ITG-386/pbi/collections/312/3120370/r54134_20170120_223549"
     "6_B01 = 0" in (movieInCellIndex(r54134_20170120_223549, "6_B01/m54134_170121_004258") mustEqual 0)
     "7_B01 = 1" in (movieInCellIndex(r54134_20170120_223549, "7_B01/m54134_170121_024222") mustEqual 1)
     "8_B01 = 2" in (movieInCellIndex(r54134_20170120_223549, "8_B01/m54134_170121_030009") mustEqual 2)
     "9_B01 = 3" in (movieInCellIndex(r54134_20170120_223549, "9_B01/m54134_170121_031800") mustEqual 3)
     "10_B01 = 4" in (movieInCellIndex(r54134_20170120_223549, "10_B01/m54134_170121_033545") mustEqual 4)
+    "Non-EOL QC should fail because we can't reliably calc movie_in_cell_index in cases of weird instrument timing, manual transfers or failed transfers" in {
+      val nonEolQc = "/pbi/dept/itg/test-data/subreadset/4_0_0_seabiscuit/pbi/collections/315/3150529/r54003_20161209_231018"
+      movieInCellIndex(nonEolQc, "1_A01/m54003_161209_232044") must throwA[Exception]
+    }
   }
 }
