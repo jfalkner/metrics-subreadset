@@ -156,7 +156,7 @@ class SubreadSet_v3_0_1(val p: Path, val xml: Node) extends Metrics {
     * The modulus 5 trick here only works because EOL QC does laser titrations of 5x
     */
   def movieInCellIndex: Int = p.toString match {
-    case s if s.contains("/pbi/collections/312") => asString("Collection Number").toInt % 5
+    case s if s.contains("/pbi/collections/312") || s.contains("/pbi/collections/324") => asString("Collection Number").toInt % 5
     case _ => throw new Exception("Can't reliably calculate non-EOL QC movieIndexInCell. See ITG-386")
   }
 }
