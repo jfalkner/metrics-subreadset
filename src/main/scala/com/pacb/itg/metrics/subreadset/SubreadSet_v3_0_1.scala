@@ -3,8 +3,8 @@ package com.pacb.itg.metrics.subreadset
 import java.nio.file.{Files, Path}
 
 import falkner.jayson.metrics._
+
 import scala.xml.{Elem, Node, XML}
-import scala.collection.JavaConverters._
 
 
 /**
@@ -149,14 +149,18 @@ class SubreadSet_v3_0_1(val p: Path, val xml: Node) extends Metrics {
   override val values: List[Metric] = unique ++ shared
 
   /**
-    * See ITG-281 this may be a bug where "Use Count" isn't populated correctly
-    * EOL QC needs this, it'll probably work fine to derive it from the directory structure and it arguably should be
-    * present in subreadset.xml. Adding the code here until Primary can add (or fix) such a number in *.subreadset.xml
+    * See ITG-450 for the fix that corrects this to work for all data if the magic .run.metadata.xml file exists
     *
-    * The modulus 5 trick here only works because EOL QC does laser titrations of 5x
+    * ITG-281 has some of the older history and also the EOL QC modulus 5 trick that used to be used for EOL QC.
     */
-  def movieInCellIndex: Int = p.toString match {
-    case s if s.contains("/pbi/collections/312") || s.contains("/pbi/collections/324") => asString("Collection Number").toInt % 5
-    case _ => throw new Exception("Can't reliably calculate non-EOL QC movieIndexInCell. See ITG-386")
+  def movieInCellIndex: Int = {
+    val xml = XML.loadFile(Files.exists(p.getParent.resolve(s".$movie.run.metadata.xml")) match {
+      case true => p.getParent.resolve(s".$movie.run.metadata.xml").toFile
+      case _ => p.getParent.resolve(s"$movie.run.metadata.xml").toFile // old naming convention
+    })
+    val all = (xml \ "ExperimentContainer" \ "Runs" \ "Run" \ "Outputs" \ "SubreadSets" \ "SubreadSet" \ "DataSetMetadata" \ "Collections" \ "CollectionMetadata").map(n => ((n  \ "CollectionNumber").head.text, (n  \ "CellIndex").head.text))
+    val cellIndex = asString("Cell Index")
+    val collectionNumber = asString("Collection Number")
+    all.filter(_._2 == cellIndex).indexOf((collectionNumber, cellIndex))
   }
 }
