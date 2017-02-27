@@ -15,7 +15,7 @@ class MovieInCellIndexSpec extends Specification with TestData {
   def movieInCellIndex(prefix: String, wellMovie: String): Int =
     SubreadSet_v3_0_1(Paths.get(s"$prefix/$wellMovie.subreadset.xml")).movieInCellIndex
 
-  // first 3 cells worth of movies for r54009_20161107_213956
+  // ITG-386 first 3 cells worth of movies for r54009_20161107_213956
   // cell index, collection count = movie in cell index
   "Movie In Chip Index" should {
     val testData = "/pbi/dept/itg/test-data"
@@ -45,6 +45,18 @@ class MovieInCellIndexSpec extends Specification with TestData {
     "8_B01 = 2" in (movieInCellIndex(r54134_20170120_223549, "8_B01/m54134_170121_030009") mustEqual 2)
     "9_B01 = 3" in (movieInCellIndex(r54134_20170120_223549, "9_B01/m54134_170121_031800") mustEqual 3)
     "10_B01 = 4" in (movieInCellIndex(r54134_20170120_223549, "10_B01/m54134_170121_033545") mustEqual 4)
+    // ITG-450 feature. EOL QC changed to 4-step laser titrations and now new (and old) data needs support
+    //val r54054_20170217_225827 = s"$testData/ITG-450/pbi/collections/312/3120370/r54054_20170217_225827"
+    val r54054_20170217_225827 = s"/pbi/collections/324/3240012/r54054_20170217_225827"
+    "1_A01 = 0" in (movieInCellIndex(r54054_20170217_225827, "1_A01/m54054_170217_230205") mustEqual 0)
+    "2_A01 = 1" in (movieInCellIndex(r54054_20170217_225827, "2_A01/m54054_170218_010050") mustEqual 1)
+    "3_A01 = 2" in (movieInCellIndex(r54054_20170217_225827, "3_A01/m54054_170218_011833") mustEqual 2)
+    "4_A01 = 3" in (movieInCellIndex(r54054_20170217_225827, "4_A01/m54054_170218_013624") mustEqual 3)
+    "5_B01 = 0" in (movieInCellIndex(r54054_20170217_225827, "5_B01/m54054_170218_003946") mustEqual 0)
+    "6_B01 = 1" in (movieInCellIndex(r54054_20170217_225827, "6_B01/m54054_170218_023940") mustEqual 1)
+    "7_B01 = 2" in (movieInCellIndex(r54054_20170217_225827, "7_B01/m54054_170218_025725") mustEqual 2)
+    "8_B01 = 3" in (movieInCellIndex(r54054_20170217_225827, "8_B01/m54054_170218_031518") mustEqual 3)
+    // confirm that this is still restricted to EOL QC
     "Non-EOL QC should fail because we can't reliably calc movie_in_cell_index in cases of weird instrument timing, manual transfers or failed transfers" in {
       val nonEolQc = "/pbi/dept/itg/test-data/subreadset/4_0_0_seabiscuit/pbi/collections/315/3150529/r54003_20161209_231018"
       movieInCellIndex(nonEolQc, "1_A01/m54003_161209_232044") must throwA[Exception]
