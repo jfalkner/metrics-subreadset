@@ -45,6 +45,7 @@ object SubreadSet {
     val srs = XML.loadFile(p.toFile)
     val version = (srs \ "@Version").text
     version match {
+      case "4.0.1" => SubreadSet_v4_0_1(p, srs)
       case "4.0.0" => SubreadSet_v4_0_0(p, srs)
       case "3.0.1" => SubreadSet_v3_0_1(p, srs)
       case _ => throw new Exception(unsupportedVersion(version))
@@ -54,4 +55,4 @@ object SubreadSet {
 
 
 // current latest version
-class SubreadSet(p: Path, xml: Elem) extends SubreadSet_v4_0_0(p, xml)
+class SubreadSet(p: Path, xml: Elem) extends SubreadSet_v4_0_1(p, xml)
