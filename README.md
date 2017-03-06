@@ -38,7 +38,3 @@ The strategy used is to put a copy of each different version of `subreadset.xml`
 `/pbi/dept/itg/test-data/subreadset`. The logic in `SubreadSet.apply` captures how to detect and correctly pick the 
 version to parse and related logic lives in dedicated `SubreadSet_v...` classes. Unit tests are then built to confirm
 each known version and use case works.
-
-## Metrics
-
-The full list of metrics is listed on [itg/metrics/docs.html under the namespace SS](http://itg/metrics/docs.html?q=SS).
