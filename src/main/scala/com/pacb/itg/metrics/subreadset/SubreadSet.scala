@@ -1,10 +1,9 @@
 package com.pacb.itg.metrics.subreadset
 
-import java.nio.file.{Files, Path, Paths}
+import java.nio.file.{Files, Path}
 
 import falkner.jayson.metrics.Metrics
 
-import scala.collection.JavaConverters._
 import scala.xml.{Elem, XML}
 
 /**
@@ -19,7 +18,7 @@ import scala.xml.{Elem, XML}
   */
 object SubreadSet {
 
-  val version = "0.0.11"
+  val version = "0.0.15"
 
   lazy val blank = new SubreadSet(null, null)
 
@@ -30,7 +29,7 @@ object SubreadSet {
   def unsupportedVersion(version: String): String = s"Version $version not currently supported"
 
   // placeholder to support other versions down the road
-  def apply(p: Path): Metrics = {
+  def apply(p: Path): Metrics =
     Files.exists(p) match {
       case true => Files.isDirectory(p) match {
         case false => loadVersion(p)
@@ -38,19 +37,16 @@ object SubreadSet {
       }
       case _ => throw new Exception(badPath(p))
     }
-  }
+
+  def loadVersion(p: Path): Metrics = loadVersion(p, XML.loadFile(p.toFile))
 
   // check what version exists and send it back
-  def loadVersion(p: Path): Metrics ={
-    val srs = XML.loadFile(p.toFile)
-    val version = (srs \ "@Version").text
-    version match {
+  def loadVersion(p:Path, srs: Elem): Metrics = (srs \ "@Version").text match {
       case "4.0.1" => SubreadSet_v4_0_1(p, srs)
       case "4.0.0" => SubreadSet_v4_0_0(p, srs)
       case "3.0.1" => SubreadSet_v3_0_1(p, srs)
-      case _ => throw new Exception(unsupportedVersion(version))
+      case v => throw new Exception(unsupportedVersion(v))
     }
-  }
 }
 
 
